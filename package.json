@@ -1,0 +1,20 @@
+{
+  "name": "esc-moonbirds",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node main.mjs && vite .",
+    "dev": "vite .",
+    "surged": "surge dist/ https://moonbirds-ethscriptions.surge.sh",
+    "deploy": "npm run build && npm run surged"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "p-map": "^6.0.0",
+    "typescript": "^5.1.6",
+    "viem": "^1.5.4"
+  }
+}
