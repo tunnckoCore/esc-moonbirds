@@ -11,13 +11,9 @@ let html = "";
 await pMap(
   items,
   async (index) => {
-    const imageBlob = await fetch(`${baseUrl}/${index}.png`, {
-      // headers: {
-      //   Accept: "application/vnd.github+json",
-      //   Authorization: "Bearer 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",
-      //   "X-GitHub-Api-Version": "2022-11-28",
-      // },
-    }).then((res) => res.blob());
+    const imageBlob = await fetch(`${baseUrl}/${index}.png`).then((res) =>
+      res.blob()
+    );
     const arrBuffer = await imageBlob.arrayBuffer();
     const buf = Buffer.from(arrBuffer);
 

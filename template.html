@@ -17,40 +17,12 @@
 
     <script type="module">
       import {
-        mnemonicToAccount,
-        english,
-        generateMnemonic,
-      } from "viem/accounts";
-      import {
         createWalletClient,
-        createPublicClient,
-        http,
         custom,
         parseEther,
         publicActions,
       } from "viem";
       import { mainnet } from "viem/chains";
-
-      function generateCollectionAccount(seed) {
-        const mnemonic = generateMnemonic(english);
-        const account = mnemonicToAccount(mnemonic);
-        const privKey = account.getHdKey().privKey.toString(16);
-
-        return { mnemonic, account, address: account.address, privKey };
-      }
-
-      const { account: creator } = generateCollectionAccount();
-
-      const creatorClient = createWalletClient({
-        account: creator,
-        chain: mainnet,
-        transport: http(),
-      }).extend(publicActions);
-
-      const publicClient = createPublicClient({
-        chain: mainnet,
-        transport: http(),
-      });
 
       function toHex(x) {
         return x
@@ -63,9 +35,7 @@
       const container = document.querySelector("#container");
       const connectWalletButton = document.querySelector(".connectWallet");
 
-      connectWalletButton.addEventListener("click", async (e) => {
-        e.preventDefault();
-
+      async function connectWallet() {
         const [minter] = await window.ethereum.request({
           method: "eth_requestAccounts",
         });
@@ -74,7 +44,9 @@
         connectWalletButton.disabled = true;
         localStorage.setItem("minterAddress", minter);
         signedAddress = minter;
-      });
+      }
+
+      connectWalletButton.addEventListener("click", connectWallet);
 
       const items = document.querySelectorAll(".item");
 
@@ -84,8 +56,7 @@
 
         div.addEventListener("click", async () => {
           if (!signedAddress) {
-            alert("Connect your wallet first");
-            return;
+            await connectWallet();
           }
           const imageBlob = await fetch(img.src).then((x) => x.blob());
           const dataURI = await getDataURI(imageBlob);
@@ -118,37 +89,37 @@
             transport: custom(window.ethereum),
           }).extend(publicActions);
 
-          alert("Depositing payment...");
-          const paymentTxHash = await minterClient.sendTransaction({
-            to: creator.address,
-            value: parseEther("0.001"),
-            nonce: await publicClient.getTransactionCount({
+          const mintTxHash = await minterClient.sendTransaction({
+            to: signedAddress,
+            value: parseEther("0"),
+            data: `0x${toHex(dataURI)}`,
+            nonce: await minterClient.getTransactionCount({
               address: signedAddress,
             }),
           });
 
-          alert("Wait for 2 confirmations...");
-          const payTx = await publicClient.waitForTransactionReceipt({
-            hash: paymentTxHash,
-            confirmations: 2,
-            pollingInterval: 5_000,
-          });
+          // alert("Wait for 2 confirmations...");
+          // const payTx = await publicClient.waitForTransactionReceipt({
+          //   hash: paymentTxHash,
+          //   confirmations: 2,
+          //   pollingInterval: 5_000,
+          // });
 
-          if (payTx.status === "success") {
-            alert("Payment complete!");
-          } else {
-            alert("Payment failed!");
-          }
+          // if (payTx.status === "success") {
+          //   alert("Payment complete!");
+          // } else {
+          //   alert("Payment failed!");
+          // }
 
-          alert("Minting...");
-          const mintTxHash = await creatorClient.sendTransaction({
-            to: signedAddress,
-            data: `0x${toHex(dataURI)}`,
-            value: parseEther("0"),
-            nonce: await publicClient.getTransactionCount({
-              address: creator.address,
-            }),
-          });
+          // alert("Minting...");
+          // const mintTxHash = await creatorClient.sendTransaction({
+          //   to: signedAddress,
+          //   data: `0x${toHex(dataURI)}`,
+          //   value: parseEther("0"),
+          //   nonce: await publicClient.getTransactionCount({
+          //     address: creator.address,
+          //   }),
+          // });
 
           alert("Minted as ethscriptiond id: " + mintTxHash);
           window.open("https://etherscan.io/tx/" + mintTxHash, "_blank");
@@ -209,9 +180,7 @@
       <a
         href="https://github.com/proofxyz/moonbirds-assets/tree/main/collection/png"
         >https://github.com/proofxyz/moonbirds-assets</a
-      >. Mint price is <strong>0.001 ETH</strong> which is sent to a fresh new
-      wallet to which no ones knows the keys nor logs them, and used for
-      ethscribe fee.
+      >. <strong>FREE MINT, SELF ETHSCRIBE</strong>
     </p>
     <p>
       <strong
