@@ -57,11 +57,7 @@ await pMap(
       async (x) => {
         if (x.eth) {
           stats.minted += 1;
-          const txt = x.eth.ethscription_number
-            ? ` #${x.eth.ethscription_number}`
-            : " Minted";
-          const url = `https://placehold.co/150x150/EEE/31343C?font=montserrat&text=Ethscription${txt}}`;
-          html += `<div class="item" data-id="${x.index}"><img alt="Moonbird ${x.index}" loading="lazy" src="${url}" style="width: 150px; height: 150px; border: 2px dashed red;"></div>`;
+          html += `<div class="item" style="opacity: 0.5" title="MINTED! Moonbird ${x.index}" data-id="${x.index}"><img alt="Moonbird ${x.index}" loading="lazy" src="https://api.ethscriptions.com/api/ethscriptions/${x.eth.transaction_hash}/data" style="width: 150px; height: 150px; border: 2px dashed red;"></div>`;
         } else {
           html += `<div class="item" data-id="${x.index}"><img alt="Moonbird ${x.index}" loading="lazy" src="${x.dataURI}" style="width: 150px; height: 150px;"></div>`;
           // const div = `<div class="item" data-id="${index}"><img alt="Moonbird ${index}" src="https://api.github.com/repos/proofxyz/moonbirds-assets/contents/collection/png/${index}.png" style="width: 150px; height: 150px;"></div>`;
