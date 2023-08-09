@@ -54,6 +54,10 @@
         const index = div.dataset.id;
         const img = div.querySelector("img");
 
+        if (div.dataset.minted) {
+          continue;
+        }
+
         div.addEventListener("click", async () => {
           if (!signedAddress) {
             await connectWallet();
@@ -194,7 +198,6 @@
     <p>
       When you connect and click on a certain Moonbird, it also checks if it was
       already ethscribed, so you cannot mint it again.
-
       <strong>{{mintedStatus}}</strong>
     </p>
     <button class="connectWallet">Connect Wallet</button>

@@ -22,7 +22,7 @@ const originalArray = items;
 const groupSize = 100;
 const groupedArrays = splitArrayIntoGroups(originalArray, groupSize);
 
-const stats = { minted: 0, supply: 10_000 };
+const stats = { minted: 0, supply: originalArray.length };
 
 await pMap(
   groupedArrays,
@@ -41,7 +41,7 @@ await pMap(
 
         return { index, sha, dataURI };
       },
-      { concurrency: 100 }
+      { concurrency: 50 }
     );
 
     const exists = await checkExists(mapped);
@@ -57,9 +57,9 @@ await pMap(
       async (x) => {
         if (x.eth) {
           stats.minted += 1;
-          html += `<div class="item" style="opacity: 0.5" title="MINTED! Moonbird ${x.index}" data-id="${x.index}"><img alt="Moonbird ${x.index}" loading="lazy" src="https://api.ethscriptions.com/api/ethscriptions/${x.eth.transaction_hash}/data" style="width: 150px; height: 150px; border: 2px dashed red;"></div>`;
+          html += `<a href="https://ethscriptions.com/ethscriptions/${x.eth.transaction_hash}" target="_blank" class="item" data-minted="true" style="opacity: 0.5" title="MINTED! Moonbird ${x.index}" data-id="${x.index}"><img alt="Moonbird ${x.index}" loading="lazy" src="https://api.ethscriptions.com/api/ethscriptions/${x.eth.transaction_hash}/data" style="width: 150px; height: 150px; border: 2px dashed red;"></a>`;
         } else {
-          html += `<a class="item" data-id="${x.index}" title="Moonbird ${x.index}"><img alt="Moonbird ${x.index}" loading="lazy" src="${x.dataURI}" style="width: 150px; height: 150px;"></a>`;
+          html += `<div class="item" data-id="${x.index}" title="Moonbird ${x.index}"><img alt="Moonbird ${x.index}" loading="lazy" src="${x.dataURI}" style="width: 150px; height: 150px;"></div>`;
           // const div = `<div class="item" data-id="${index}"><img alt="Moonbird ${index}" src="https://api.github.com/repos/proofxyz/moonbirds-assets/contents/collection/png/${index}.png" style="width: 150px; height: 150px;"></div>`;
         }
       },
@@ -67,7 +67,7 @@ await pMap(
     );
     console.log("group end", idx + 1);
   },
-  { concurrency: 5 }
+  { concurrency: 2 }
 ).then(async () => {
   const indexHtml = await fs.readFile("./template.html", "utf-8");
   const newIndex = indexHtml.replace(
