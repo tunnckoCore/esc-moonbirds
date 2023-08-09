@@ -134,6 +134,7 @@
           reader.readAsDataURL(imageBlob);
         });
       }
+
       async function checkExists(dataURI) {
         const sha = await sha256(dataURI);
 
@@ -175,7 +176,7 @@
     <title>10k PNG Moonbird Ethscriptions - FREE MINT</title>
   </head>
   <body>
-    <h1>10K Moonbirds PNG Ethscriptions</h1>
+    <h1 style="margin-top: 20px">10K Moonbirds PNG Ethscriptions</h1>
     <p>
       Sourced from
       <a
@@ -193,6 +194,8 @@
     <p>
       When you connect and click on a certain Moonbird, it also checks if it was
       already ethscribed, so you cannot mint it again.
+
+      <strong>{{mintedStatus}}</strong>
     </p>
     <button class="connectWallet">Connect Wallet</button>
     <div id="container"></div>
