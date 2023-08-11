@@ -14,7 +14,9 @@
   "license": "ISC",
   "dependencies": {
     "p-map": "^6.0.0",
+    "surge": "^0.23.1",
     "typescript": "^5.1.6",
-    "viem": "^1.5.4"
+    "viem": "^1.5.4",
+    "vite": "^4.4.9"
   }
 }
