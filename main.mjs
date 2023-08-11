@@ -67,7 +67,7 @@ await pMap(
     );
     console.log("group end", idx + 1);
   },
-  { concurrency: 2 }
+  { concurrency: 5 }
 ).then(async () => {
   const indexHtml = await fs.readFile("./template.html", "utf-8");
   const newIndex = indexHtml.replace(
