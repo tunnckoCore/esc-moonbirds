@@ -75,11 +75,8 @@ await pMap(
     `<div id="container">${html}</div>`
   );
 
-  const status = `${stats.minted} / ${stats.supply} minted`;
-  await fs.writeFile(
-    "./index.html",
-    newIndex.replace(`<strong>{{mintedStatus}}</strong>`, status)
-  );
+  await fs.writeFile("./index.html", newIndex);
+  await fs.writeFile("./status.json", JSON.stringify(stats));
 });
 
 async function sha256(message) {

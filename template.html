@@ -171,6 +171,15 @@
         return hashHex;
       }
 
+      const mintedEl = document.querySelector("#mintStatus .minted");
+
+      mintedEl.textContent = "0";
+      fetch("/status.json")
+        .then((x) => x.json())
+        .then((x) => {
+          mintedEl.textContent = x.minted;
+        });
+
       // https://api.github.com/repos/proofxyz/moonbirds-assets/contents/collection/png/10000.png
     </script>
     <link
@@ -198,7 +207,7 @@
     <p>
       When you connect and click on a certain Moonbird, it also checks if it was
       already ethscribed, so you cannot mint it again.
-      <strong>{{mintedStatus}}</strong>
+      <strong id="mintStatus"><span class="minted"></span> / 10,000</strong>
     </p>
     <button class="connectWallet">Connect Wallet</button>
     <div id="container"></div>
